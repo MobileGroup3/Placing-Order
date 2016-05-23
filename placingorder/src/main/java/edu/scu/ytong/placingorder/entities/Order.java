@@ -6,16 +6,25 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.persistence.BackendlessDataQuery;
 
-/**
- * Created by yizhou on 5/18/16.
- */
-public class Order {
+public class Order{
+    private java.util.Date pickTime;
     private String ownerId;
     private java.util.Date updated;
-    private String objectId;
+    private String note;
     private java.util.Date created;
-    private java.util.List<Menu> menuItem;
+    private String objectId;
     private BackendlessUser customer;
+    private java.util.List<OrderItem> orderItem;
+    public java.util.Date getPickTime()
+    {
+        return pickTime;
+    }
+
+    public void setPickTime( java.util.Date pickTime )
+    {
+        this.pickTime = pickTime;
+    }
+
     public String getOwnerId()
     {
         return ownerId;
@@ -26,9 +35,14 @@ public class Order {
         return updated;
     }
 
-    public String getObjectId()
+    public String getNote()
     {
-        return objectId;
+        return note;
+    }
+
+    public void setNote( String note )
+    {
+        this.note = note;
     }
 
     public java.util.Date getCreated()
@@ -36,14 +50,9 @@ public class Order {
         return created;
     }
 
-    public java.util.List<Menu> getMenuItem()
+    public String getObjectId()
     {
-        return menuItem;
-    }
-
-    public void setMenuItem( java.util.List<Menu> menuItem )
-    {
-        this.menuItem = menuItem;
+        return objectId;
     }
 
     public BackendlessUser getCustomer()
@@ -54,6 +63,16 @@ public class Order {
     public void setCustomer( BackendlessUser customer )
     {
         this.customer = customer;
+    }
+
+    public java.util.List<OrderItem> getOrderItem()
+    {
+        return orderItem;
+    }
+
+    public void setOrderItem( java.util.List<OrderItem> orderItem )
+    {
+        this.orderItem = orderItem;
     }
 
 

@@ -2,63 +2,44 @@ package edu.scu.ytong.placingorder.entities;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.persistence.BackendlessDataQuery;
 
-
 public class Kitchen {
-    private String phoneNumber;
-    private String country;
-    private String owner;
-    private String ownerId;
-    private String objectId;
-    private String city;
+
     private String street;
-    private String name;
+    private String kitchenName;
+    private String city;
+    private String zipcode;
+    private String objectId;
+    private String kitchenPic;
+    private String phoneNumber;
     private String category;
     private java.util.Date updated;
     private String email;
-    private String kitchenPic;
+    private String ownerId;
     private java.util.Date created;
-    private Menu menu;
-    public String getPhoneNumber()
+    private BackendlessUser owner;
+    private Dish dish;
+    public String getStreet()
     {
-        return phoneNumber;
+        return street;
     }
 
-    public void setPhoneNumber( String phoneNumber )
+    public void setStreet( String street )
     {
-        this.phoneNumber = phoneNumber;
+        this.street = street;
     }
 
-    public String getCountry()
+    public String getKitchenName()
     {
-        return country;
+        return kitchenName;
     }
 
-    public void setCountry( String country )
+    public void setKitchenName( String kitchenName )
     {
-        this.country = country;
-    }
-
-    public String getOwner()
-    {
-        return owner;
-    }
-
-    public void setOwner( String owner )
-    {
-        this.owner = owner;
-    }
-
-    public String getOwnerId()
-    {
-        return ownerId;
-    }
-
-    public String getObjectId()
-    {
-        return objectId;
+        this.kitchenName = kitchenName;
     }
 
     public String getCity()
@@ -71,24 +52,39 @@ public class Kitchen {
         this.city = city;
     }
 
-    public String getStreet()
+    public String getZipcode()
     {
-        return street;
+        return zipcode;
     }
 
-    public void setStreet( String street )
+    public void setZipcode( String zipcode )
     {
-        this.street = street;
+        this.zipcode = zipcode;
     }
 
-    public String getName()
+    public String getObjectId()
     {
-        return name;
+        return objectId;
     }
 
-    public void setName( String name )
+    public String getKitchenPic()
     {
-        this.name = name;
+        return kitchenPic;
+    }
+
+    public void setKitchenPic( String kitchenPic )
+    {
+        this.kitchenPic = kitchenPic;
+    }
+
+    public String getPhoneNumber()
+    {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber( String phoneNumber )
+    {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getCategory()
@@ -116,14 +112,9 @@ public class Kitchen {
         this.email = email;
     }
 
-    public String getKitchenPic()
+    public String getOwnerId()
     {
-        return kitchenPic;
-    }
-
-    public void setKitchenPic( String kitchenPic )
-    {
-        this.kitchenPic = kitchenPic;
+        return ownerId;
     }
 
     public java.util.Date getCreated()
@@ -131,14 +122,24 @@ public class Kitchen {
         return created;
     }
 
-    public Menu getMenu()
+    public BackendlessUser getOwner()
     {
-        return menu;
+        return owner;
     }
 
-    public void setMenu( Menu menu )
+    public void setOwner( BackendlessUser owner )
     {
-        this.menu = menu;
+        this.owner = owner;
+    }
+
+    public Dish getDish()
+    {
+        return dish;
+    }
+
+    public void setDish( Dish dish )
+    {
+        this.dish = dish;
     }
 
 

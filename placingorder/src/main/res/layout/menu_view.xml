@@ -2,13 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    >
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
         android:id="@+id/image_view_dish" />
+
+     <View
+         android:layout_width="match_parent"
+         android:layout_height="1dp"
+         android:background="@color/lightGrey" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,35 +30,46 @@
         android:text="Dish Description"
         android:id="@+id/text_view_dish_description" />
 
-    <RelativeLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightGrey" />
+
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Price : $ " />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Dish Price"
-            android:id="@+id/text_view_dish_price"
-            />
+            android:id="@+id/text_view_dish_price" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Remaining : X " />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Remaining Number"
-            android:id="@+id/text_view_remaining_number"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/text_view_dish_price"
-            android:layout_marginLeft="40dp"
-            />
+            android:id="@+id/text_view_remaining_number" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_add_dish"
-            android:layout_alignBaseline="@id/text_view_dish_price"
-            android:layout_alignParentRight="true"
             android:text="ADD"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
