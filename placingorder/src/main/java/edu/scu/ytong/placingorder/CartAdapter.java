@@ -12,21 +12,22 @@ import android.widget.Toast;
 import java.util.List;
 
 import edu.scu.ytong.placingorder.entities.DishItem;
-import edu.scu.ytong.placingorder.entities.OrderItemSimple;
+import edu.scu.ytong.placingorder.entities.OrderItem;
 
-public class CartAdapter extends ArrayAdapter<OrderItemSimple>{
+
+public class CartAdapter extends ArrayAdapter<OrderItem>{
     DishAddedListener dishAddedListener;
-    List<OrderItemSimple> cartList;
+    List<OrderItem> cartList;
     TextView cartDishNameTextView;
     TextView cartDishPriceTextView;
     TextView cartDishQuantityTextView;
     Button addDishInCart;
+    Button reduceDishInCart;
 
-    public CartAdapter(Context context, int resource, List<OrderItemSimple> cartList,DishAddedListener dishAddedListener) {
+    public CartAdapter(Context context, int resource, List<OrderItem> cartList,DishAddedListener dishAddedListener) {
         super(context,resource,cartList);
         this.cartList = cartList ;
         this.dishAddedListener = dishAddedListener;
-
 
     }
 
@@ -37,8 +38,8 @@ public class CartAdapter extends ArrayAdapter<OrderItemSimple>{
             convertView = layoutInflater.inflate(R.layout.shopping_cart_item_view, parent, false);
 
         }
-
-        final DishItem dish = cartList.get(position).getDishItem();
+        final OrderItem orderItem = cartList.get(position);
+        final DishItem dish = orderItem.getDishItem();
         cartDishNameTextView = (TextView) convertView.findViewById(R.id.text_view_shopping_dish_name);
         cartDishNameTextView.setText(dish.getName());
 
@@ -68,6 +69,14 @@ public class CartAdapter extends ArrayAdapter<OrderItemSimple>{
                 }
 
 
+            }
+        });
+
+        reduceDishInCart = (Button) convertView.findViewById(R.id.button_cart_reduce_dish);
+        reduceDishInCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dishAddedListener.onDishReduced(orderItem);
             }
         });
 

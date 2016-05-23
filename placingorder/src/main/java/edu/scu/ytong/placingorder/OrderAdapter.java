@@ -10,17 +10,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.scu.ytong.placingorder.entities.DishItem;
-import edu.scu.ytong.placingorder.entities.OrderItemSimple;
+import edu.scu.ytong.placingorder.entities.OrderItem;
 
-public class OrderAdapter extends ArrayAdapter<OrderItemSimple> {
 
-    List<OrderItemSimple> orderList;
+public class OrderAdapter extends ArrayAdapter<OrderItem> {
+
+    List<OrderItem> orderList;
     TextView orderDishNameTextView;
     TextView orderDishPriceTextView;
     TextView orderDishQuantityTextView;
 
 
-    public OrderAdapter(Context context, int resource, List<OrderItemSimple> orderList) {
+    public OrderAdapter(Context context, int resource, List<OrderItem> orderList) {
         super(context,resource,orderList);
         this.orderList = orderList;
     }
@@ -46,7 +47,7 @@ public class OrderAdapter extends ArrayAdapter<OrderItemSimple> {
         return convertView;
     }
 
-    public void setData(List<OrderItemSimple> orderList) {
+    public void setData(List<OrderItem> orderList) {
         this.orderList = orderList;
         notifyDataSetChanged();
 

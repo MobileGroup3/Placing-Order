@@ -21,8 +21,9 @@ import java.util.List;
 
 import edu.scu.ytong.placingorder.entities.DishItem;
 import edu.scu.ytong.placingorder.entities.Kitchen;
-import edu.scu.ytong.placingorder.entities.OrderItemSimple;
+import edu.scu.ytong.placingorder.entities.OrderItem;
 import edu.scu.ytong.placingorder.entities.SimpleCartItem;
+import edu.scu.ytong.placingorder.utility.BackendSetting;
 
 public class PlacingOrderActivity extends AppCompatActivity implements DishAddedListener{
 
@@ -30,6 +31,7 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
     ImageView kitchenThumbImageView;
     TextView kitchenNameTextView;
     Button addressButton;
+
     RecyclerView menuRecyclerView;
     LinearLayoutManager llm;
     MenuAdapter menuAdapter;
@@ -37,7 +39,7 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
     List<DishItem> dishItemList;
     TextView totalAmountTextView;
 
-    ArrayList<OrderItemSimple> shoppingCartList;
+    ArrayList<OrderItem> shoppingCartList;
     CartAdapter cartAdapter;
     ListView cartListView;
 
@@ -45,45 +47,42 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
     ImageView cartIconImageView;
     Button checkOutButton;
 
+    Button phoneNumberButton;
+    String phoneNumber;
+
     ArrayList<SimpleCartItem> simpleCartItemsList;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_placing_order);
 
-        final String APPLICATION_ID = "6B06D541-69FC-AA24-FF52-EB6421144100";
-        final String ANDROID_SECRET_KEY = "F2C00252-B60B-8048-FF2B-F2893504BD00";
-        final String VERSION = "v1";
-
-
-        Backendless.initApp( this, APPLICATION_ID, ANDROID_SECRET_KEY, VERSION);
-
+        Backendless.initApp(this, BackendSetting.APPLICATION_ID, BackendSetting.ANDROID_SECRET_KEY, BackendSetting.VERSION);
 
 
         kitchenThumbImageView = (ImageView) findViewById(R.id.image_view_kitchen_thumb);
         kitchenNameTextView = (TextView) findViewById(R.id.text_view_kitchen_name);
         addressButton = (Button) findViewById(R.id.button_address);
+        phoneNumberButton = (Button) findViewById(R.id.button_phone_number);
+        totalAmountTextView = (TextView) findViewById(R.id.text_view_total_amount);
 
 
         menuRecyclerView = (RecyclerView) findViewById(R.id.list_view_menu);
 
-        llm = new LinearLayoutManager(getApplicationContext());
+        llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         menuRecyclerView.setLayoutManager(llm);
         menuRecyclerView.addItemDecoration(new SpaceItemDecoration(this, R.dimen.menu_item_space, true, false));
 
         dishItemList = new ArrayList<DishItem>();
-        menuAdapter = new MenuAdapter(getApplicationContext(), dishItemList,this);
+        menuAdapter = new MenuAdapter(this, dishItemList,this);
         menuRecyclerView.setAdapter(menuAdapter);
 
-        shoppingCartList = new ArrayList<OrderItemSimple>();
+        shoppingCartList = new ArrayList<OrderItem>();
         simpleCartItemsList = new ArrayList<SimpleCartItem>();
         cartListView = (ListView) findViewById(R.id.list_view_shopping_cart);
-        cartAdapter = new CartAdapter(getApplicationContext(),R.layout.shopping_cart_item_view,shoppingCartList,this);
+        cartAdapter = new CartAdapter(this,R.layout.shopping_cart_item_view,shoppingCartList,this);
         cartListView.setAdapter(cartAdapter);
 
         cartIconImageView = (ImageView) findViewById(R.id.image_view_cart_icon);
@@ -129,8 +128,10 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
                 String address = kitchen.getStreet() + ", "+ kitchen.getCity() + ", "+ kitchen.getZipcode();
                 addressButton.setText(address);
 
+                Picasso.with(PlacingOrderActivity.this).load(kitchen.getKitchenPic()).into(kitchenThumbImageView);
 
-                Picasso.with(getApplicationContext()).load(kitchen.getKitchenPic()).into(kitchenThumbImageView);
+                phoneNumber = kitchen.getPhoneNumber();
+                phoneNumberButton.setText(phoneNumber);
 
                 // Modify the menu of null situation
                 List<DishItem> list = kitchen.getDish().getDishItem();
@@ -145,15 +146,18 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
         checkOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String a = totalAmountTextView.getText().toString();
                 double totalAmount = Double.parseDouble(totalAmountTextView.getText().toString());
-                if(totalAmount == 0 ) {
-                    Toast.makeText(v.getContext(),"Please Add Dish Into Cart First",Toast.LENGTH_SHORT).show();
+                if(totalAmount == 0.0 ) {
+                    Toast.makeText(
+                            PlacingOrderActivity.this,"Please Add Dish Into Cart First",Toast.LENGTH_SHORT).show();
                 }else {
-                    Intent intent = new Intent(PlacingOrderActivity.this,OrderConformationActivity.class);
+                    Intent intent = new Intent(PlacingOrderActivity.this, OrderConformationActivity.class);
 
                     intent.putParcelableArrayListExtra("cart_list_extra_key",simpleCartItemsList);
                     intent.putExtra("total_amount_extra_key",totalAmount);
                     intent.putExtra("address_extra_key", addressButton.getText());
+                    intent.putExtra("phone_number_extra_key",phoneNumber);
 
                     startActivity(intent);
 
@@ -162,24 +166,56 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
 
             }
         });
+    }
 
+
+    @Override
+    public void onDishReduced(OrderItem orderItem) {
+        DishItem dish = orderItem.getDishItem();
+        double price = dish.getPrice();
+        double totalAmountPre = Double.parseDouble(totalAmountTextView.getText().toString());
+        double totalAmountCur = totalAmountPre - price;
+        totalAmountTextView.setText(String.valueOf(totalAmountCur));
+        reduceInShoppingCart(orderItem);
+
+    }
+
+    public void reduceInShoppingCart(OrderItem orderItem) {
+        int orderQuantity = orderItem.getOrderQuantity();
+        DishItem dish = orderItem.getDishItem();
+        int position = getCartPosition(dish);
+
+        if(orderQuantity == 1) {
+            shoppingCartList.remove(position);
+            simpleCartItemsList.remove(position);
+
+        }else {
+            orderItem.setOrderQuantity(orderItem.getOrderQuantity() - 1);
+
+            SimpleCartItem simpleCartItem = simpleCartItemsList.get(position);
+            simpleCartItem.setOrderQuantity(simpleCartItem.getOrderQuantity() - 1);
+
+        }
+        dish.setMax_num(dish.getMax_num() + 1);
+        updateAdapters();
     }
 
     @Override
     public void onDishAdded(DishItem dish) {
         double price = dish.getPrice();
-        totalAmountTextView = (TextView) findViewById(R.id.text_view_total_amount);
         double totalAmountPre = Double.parseDouble(totalAmountTextView.getText().toString());
         double totalAmountCur = totalAmountPre + price;
         totalAmountTextView.setText(String.valueOf(totalAmountCur));
-        updateShoppingCart(dish);
+        addInShoppingCart(dish);
 
     }
 
-    public void updateShoppingCart(DishItem dish) {
+    public void addInShoppingCart(DishItem dish) {
         if(getCartPosition(dish) < 0) {
-            OrderItemSimple orderItemSimple = new OrderItemSimple(dish,1);
-            shoppingCartList.add(orderItemSimple);
+            OrderItem orderItem= new OrderItem();
+            orderItem.setOrderQuantity(1);
+            orderItem.setDishItem(dish);
+            shoppingCartList.add(orderItem);
 
             SimpleCartItem simpleCartItem = new SimpleCartItem(dish.getObjectId(),1);
             simpleCartItemsList.add(simpleCartItem);
@@ -187,8 +223,8 @@ public class PlacingOrderActivity extends AppCompatActivity implements DishAdded
 
         }else {
             int position = getCartPosition(dish);
-            OrderItemSimple orderItemSimple = shoppingCartList.get(position);
-            orderItemSimple.setOrderQuantity(orderItemSimple.getOrderQuantity() + 1);
+            OrderItem orderItem = shoppingCartList.get(position);
+            orderItem.setOrderQuantity(orderItem.getOrderQuantity() + 1);
 
             SimpleCartItem simpleCartItem = simpleCartItemsList.get(position);
             simpleCartItem.setOrderQuantity(simpleCartItem.getOrderQuantity() + 1);

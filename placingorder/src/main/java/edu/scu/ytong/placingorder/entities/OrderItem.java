@@ -16,6 +16,13 @@ public class OrderItem
     private Integer orderQuantity;
     private DishItem dishItem;
 
+//    public OrderItem(int orderQuantity, DishItem dishItem) {
+//        this.orderQuantity = orderQuantity;
+//        this.dishItem = dishItem;
+//    }
+
+    public OrderItem(){}
+
     public Date getUpdated()
     {
         return updated;
