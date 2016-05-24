@@ -31,17 +31,17 @@
        />
 
     <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
         android:id="@+id/button_cart_reduce_dish"
-        android:background="@drawable/delete_icon" />
+        android:text="-"/>
 
 
     <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
         android:id="@+id/button_cart_add_dish"
-        android:background="@drawable/add_icon" />
+        android:text="+" />
 
 
 </LinearLayout>

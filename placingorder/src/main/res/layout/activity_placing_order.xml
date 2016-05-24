@@ -40,7 +40,8 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/button_phone_number"
@@ -49,9 +50,10 @@
                     android:text="6503355163"/>
 
                 <Button
-                    android:id="@+id/button_follow_kitchen"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp" />
+                    android:id="@+id/image_view_follow_kitchen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unfollow" />
 
             </LinearLayout>
 
